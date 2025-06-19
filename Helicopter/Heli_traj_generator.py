@@ -19,6 +19,7 @@ duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
 sample = 5
+seeding = 14
 
 m = 1.5
 g = 9.81
@@ -29,7 +30,7 @@ I = np.diag([Ixx, Iyy, Izz])
 k_drag_linear = 0.5
 k_drag_angular = 0.05
 
-Heli_scene = Heli_ScenarioSampler(m, g)
+Heli_scene = Heli_ScenarioSampler(m, g, seed = seeding)
 Heli_conditions = Heli_scene.sample(n_samples = sample)
 
 Heli = HelicopterUAV(m = m, 
