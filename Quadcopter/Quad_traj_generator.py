@@ -18,7 +18,8 @@ from Quad_ScenarioSampler import Quad_ScenarioSampler
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
-sample = 5
+sample = 1000
+seeding = 14
 
 q_mass = 0.5 # kg
 g = 9.81 # m/s²
@@ -36,7 +37,7 @@ hover = np.sqrt(q_mass * g / (4 * kT))
 delta_speed = 25 # rad/s
 max_speed = 400
 
-Quad_scene = Quad_ScenarioSampler(hover_omega = hover, delta = delta_speed, max_omega = max_speed)
+Quad_scene = Quad_ScenarioSampler(hover_omega = hover, delta = delta_speed, max_omega = max_speed, seed = seeding)
 Quad_conditions = Quad_scene.sample(n_samples = sample)
 Quad = quadcopter(m = q_mass, 
                   g = g, 

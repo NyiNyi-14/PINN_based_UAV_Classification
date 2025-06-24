@@ -18,7 +18,8 @@ from FW_ScenarioSampler import FW_ScenarioSampler
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
-sample = 5
+sample = 1000
+seeding = 14
 
 params = [
     # === Mass and Inertia ===
@@ -79,7 +80,7 @@ FW = FixedWingUAV(params = params)
 base_throttle = 0.5
 delta_throttle = 0.15
 
-FW_sampler = FW_ScenarioSampler(base_throttle = base_throttle, delta = delta_throttle)
+FW_sampler = FW_ScenarioSampler(base_throttle = base_throttle, delta = delta_throttle, seed = seeding)
 FW_conditions = FW_sampler.sample(n_samples = sample)
 print(f"FW condition: \n {FW_conditions}")
 

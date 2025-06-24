@@ -1,7 +1,7 @@
-# %%
+# %% Import Libraries
 import numpy as np
 
-# %%
+# %% FixedWing Dynamics
 class FixedWingUAV:
     def __init__(self, params):
         """

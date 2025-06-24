@@ -39,7 +39,4 @@ class UAVDataset(Dataset):
 # dx_list: list of N_traj arrays, each of shape (T, 12)
 # labels: list of N_traj integers: [0, 0, ..., 1, 1, ..., 2, 2, ...]
 
-dataset = UAVDataset(state, u, d_state, labels)
-loader = torch.utils.data.DataLoader(dataset, batch_size=128, shuffle=True)
-
 
