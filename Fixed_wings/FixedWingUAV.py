@@ -4,10 +4,6 @@ import numpy as np
 # %% FixedWing Dynamics
 class FixedWingUAV:
     def __init__(self, params):
-        """
-        Initialize fixed-wing parameters.
-        params: list of constants and aerodynamic coefficients in specific order.
-        """
         self.m, self.g, self.Ixx, self.Iyy, self.Izz, self.Ixz, self.rho, self.S, self.b, self.c = params[0:10]
         self.CD0, self.CL0, self.Cm0, self.CY0, self.Cl0, self.Cn0 = params[10:16]
         self.CD_alpha, self.CL_alpha, self.Cm_alpha, self.CY_beta, self.Cl_beta, self.Cn_beta = params[16:22]
@@ -66,8 +62,8 @@ class FixedWingUAV:
         Fz_aero = q_bar * self.S * (-CD * np.sin(alpha) - CL * np.cos(alpha))
 
         # Thrust Force
-        Omega_max = self.omega * 2 * np.pi / 60  # Max RPM → rad/s
-        Omega_p = throttle * Omega_max     # Actual RPM based on throttle
+        Omega_max = self.omega * 2 * np.pi / 60 
+        Omega_p = throttle * Omega_max    
         Fx_prop = (self.rho * self.D**4 / (4 * np.pi**2)) * (Omega_p**2) * self.Ct
 
         # Gravity Force in Body Frame

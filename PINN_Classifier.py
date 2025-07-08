@@ -1,4 +1,4 @@
-# %%
+# %% Import libraries
 import torch
 import torch.nn as nn
 import numpy as np
@@ -9,8 +9,7 @@ from torch.optim.lr_scheduler import SequentialLR, ConstantLR, LinearLR
 
 from PINN import PINN
 
-# %%
-# ================== ENHANCED TRAINER ==================
+# %% PIRNN Classifier
 class PINN_Classifier:
     def __init__(self, input_dim, output_dim, lr, delta_loss, interval):
         self.model = PINN(input_dim, output_dim)
@@ -43,8 +42,8 @@ class PINN_Classifier:
         save_dir = "results"
         os.makedirs(save_dir, exist_ok=True)
 
-        phase1_end = int(0.3 * num_epochs)
-        phase2_end = int(0.7 * num_epochs)
+        phase1_end = int(0.5 * num_epochs)
+        phase2_end = int(0.8 * num_epochs)
 
         phase1 = ConstantLR(self.optimizer, 
                             factor = 1.0,
@@ -65,7 +64,6 @@ class PINN_Classifier:
                                       milestones=[phase1_end, phase2_end])
         
         for epoch in range(num_epochs):
-            # Training phase
             self.model.train()
             epoch_train_loss = 0
             for X_batch, Y_batch in train:
@@ -80,7 +78,6 @@ class PINN_Classifier:
             epoch_train_loss /= len(train) 
             train_losses.append(epoch_train_loss) 
 
-            # Validation phase
             self.model.eval()
             epoch_val_loss = 0
             with torch.no_grad():
@@ -92,12 +89,9 @@ class PINN_Classifier:
             epoch_val_loss /= len(validate)
             val_losses.append(epoch_val_loss)
 
-            # Save best model state
             if self.best_model_state is None or epoch_val_loss < min(val_losses[:-1]):
                 self.best_model_state = self.model.state_dict()
 
-            # Learning rate schedule
-            # self.scheduler.step(epoch_val_loss)
             self.scheduler.step()  
 
             if (epoch + 1) % print_interval == 0:
@@ -107,7 +101,6 @@ class PINN_Classifier:
                     f"LR: {self.optimizer.param_groups[0]['lr']:.1e} | "
                     f"Time: {total_time // 60:.0f} min {total_time % 60:.2f} sec")
            
-            # Early stopping check
             if epoch >= self.interval and epoch % self.interval == 0:
                 prev_avg = np.mean(val_losses[epoch - self.interval:epoch])
                 curr_avg = np.mean(val_losses[epoch - self.interval + 1:epoch + 1])
@@ -115,11 +108,9 @@ class PINN_Classifier:
                     print(f"Early stopping at epoch {epoch}")
                     break
 
-        # Save best model
         model_path = os.path.join(save_dir, "Pinn_model.pth")
         torch.save(self.best_model_state, model_path)
 
-        # Save losses
         np.save(os.path.join(save_dir, "train_losses.npy"), np.array(train_losses))
         np.save(os.path.join(save_dir, "val_losses.npy"), np.array(val_losses))
 
@@ -137,8 +128,7 @@ class PINN_Classifier:
         plt.savefig(os.path.join(save_dir, "loss_plot.png"))
         plt.close()
 
-    # ================== IMPROVED CLASSIFICATION ==================
-    def classify(self, x, u, dx, num_classes=3):
+    def classify(self, x, dx, num_classes=3):
         self.model.eval()
 
         UAV_LABELS = {
@@ -147,25 +137,19 @@ class PINN_Classifier:
         2: "Helicopter"
         }
 
-        # Convert to tensors (vectorized)
         x_tensor = torch.as_tensor(x, dtype=torch.float32, device = self.device)
-        u_tensor = torch.as_tensor(u, dtype=torch.float32, device = self.device)
         dx_tensor = torch.as_tensor(dx, dtype=torch.float32, device = self.device)
 
-        # Generate all class labels at once
         labels = torch.eye(num_classes, device=x_tensor.device)
-
-        # Create batch for all classes
         inputs = torch.cat([
             x_tensor.repeat_interleave(num_classes, 0),
-            u_tensor.repeat_interleave(num_classes, 0),
             labels.repeat(x.shape[0], 1)
         ], dim=1)
 
         with torch.no_grad():
             dx_pred = self.model(inputs).view(-1, num_classes, dx.shape[1])
             losses = torch.mean((dx_pred - dx_tensor.unsqueeze(1))**2, dim=2)
-            mean_loss = torch.mean(losses, dim=0)  # [C]
+            mean_loss = torch.mean(losses, dim=0) 
             probs = torch.softmax(-mean_loss * 10, dim=0) * 100
         
         loss_vals = mean_loss.cpu().numpy()
@@ -179,22 +163,9 @@ class PINN_Classifier:
         print(f"Predicted UAV Type: {UAV_LABELS[torch.argmin(mean_loss).item()]}")
 
         return (
-            torch.argmin(mean_loss).item(),              # predicted class (int)
-            loss_vals,                     # avg MSE loss per class
-            conf_vals                 # softmax confidence per class
+            torch.argmin(mean_loss).item(),             
+            loss_vals,                    
+            conf_vals            
         )
-
-    # ================== NEW PHYSICS VALIDATION ==================
-    def validate_physics(self, test_loader):
-        """Check physical consistency of predictions"""
-        self.model.eval()
-        violations = 0
-        with torch.no_grad():
-            for X_batch, Y_batch in test_loader:
-                Y_pred = self.model(X_batch)
-                # Example check: Energy should be below threshold
-                energy = torch.sum(Y_pred[:, :3]**2, dim=1)  # Kinetic energy
-                violations += torch.sum(energy > 1.0).item()
-        print(f"Physics violations: {violations}/{len(test_loader.dataset)}")
 
 # %%

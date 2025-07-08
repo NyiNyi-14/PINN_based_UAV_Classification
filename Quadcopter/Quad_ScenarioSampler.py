@@ -1,7 +1,7 @@
-# %%
+# %% Import libraries
 import numpy as np
 
-# %%
+# %% Generate scenarios for quadcopter UAVs
 class Quad_ScenarioSampler:
     def __init__(self, hover_omega, delta, max_omega, seed = None):
         self.hover_omega = hover_omega

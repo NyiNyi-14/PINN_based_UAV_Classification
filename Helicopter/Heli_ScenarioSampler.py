@@ -1,7 +1,7 @@
-# %%
+# %% Import libraries
 import numpy as np
 
-# %%
+# %% Generate scenarios for helicopter UAVs
 class Heli_ScenarioSampler:
     def __init__(self, m, g, seed = None):
         self.m = m

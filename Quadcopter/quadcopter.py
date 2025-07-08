@@ -33,10 +33,6 @@ class quadcopter:
         ])
 
     def rotor_forces(self, omega):
-        """
-        Convert rotor speeds to thrust and torque.
-        omega = [ω1, ω2, ω3, ω4]
-        """
         T = self.kT * omega**2
         tau = self.kD * omega**2
         return T, tau

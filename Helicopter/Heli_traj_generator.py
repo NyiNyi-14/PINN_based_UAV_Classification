@@ -5,16 +5,15 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation
 
-# Assuming your heli_dynamics class is in helicopter/HelicopterUAV.spy
-from HelicopterUAV import HelicopterUAV
-from Heli_ScenarioSampler import Heli_ScenarioSampler
-
 import os
-os.chdir("/Users/nyinyia/Documents/09_LSU_GIT/PINN_based_UAV_Classification")
+os.chdir("...")
 print("Current working directory:", os.getcwd())
 print("Files in the directory:", os.listdir(os.getcwd()))
 
-# %% ============================ Simulation parameter ============================
+from HelicopterUAV import HelicopterUAV
+from Heli_ScenarioSampler import Heli_ScenarioSampler
+
+# %% Simulation parameter
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
@@ -44,7 +43,7 @@ Heli = HelicopterUAV(m = m,
 # x, y, z, vx, vy, vz, phi, theta, psi, p, q, r
 print(f"Heli Condition: \n {Heli_conditions}")
 
-# %%
+# %% Generate Trajectories
 heli_state = []
 for i in range(sample):
     thrust_cyclic = Heli_conditions[i][0]
@@ -52,8 +51,6 @@ for i in range(sample):
     sol = solve_ivp(lambda t, y: Heli.dynamics(t, y, thrust_cyclic), [0, duration], init, t_eval=time)
     heli_state.append(sol.y.T)
 
-# %%
-#  Visualization for Quad
 few_samples = 10
 n_plot = min(few_samples, len(heli_state))
 

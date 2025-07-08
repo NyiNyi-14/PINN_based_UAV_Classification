@@ -7,14 +7,14 @@ import torch
 import torch.nn as nn
 
 import os
-os.chdir("/Users/nyinyia/Documents/09_LSU_GIT/PINN_based_UAV_Classification/Fixed_wings")
+os.chdir("...")
 print("Current working directory:", os.getcwd())
 print("Files in the directory:", os.listdir(os.getcwd()))
 
 from FixedWingUAV import FixedWingUAV
 from FW_ScenarioSampler import FW_ScenarioSampler
 
-# %% ============================ Simulation parameter ============================
+# %% Simulation parameter 
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
@@ -22,7 +22,6 @@ sample = 1000
 seeding = 14
 
 params = [
-    # === Mass and Inertia ===
     1.0,        # [0] mass (kg) — small electric fixed-wing UAV
     9.81,       # [1] gravity (m/s²)
     0.03,       # [2] Ixx (kg·m²) — roll inertia (reduced for 1 kg aircraft)
@@ -30,15 +29,12 @@ params = [
     0.05,       # [4] Izz (kg·m²) — yaw inertia (Ixx + Iyy approx)
     0.01,       # [5] Ixz (kg·m²) — cross-inertia, small
 
-    # === Environmental Constants ===
     1.225,      # [6] air density (kg/m³)
 
-    # === Geometry ===
     0.3,        # [7] wing area S (m²) — suitable for 1 kg UAV
     1.5,        # [8] wingspan b (m) — gives AR ≈ 7.5
     0.2,        # [9] mean chord c (m) — S / b = 0.2
 
-    # === Aerodynamic Coefficients ===
     0.02,       # [10] CD0 — parasitic drag
     0.1,        # [11] CL0 — lift offset at α = 0
     0.0,        # [12] Cm0 — pitching moment at trim
@@ -70,16 +66,14 @@ params = [
     0.3,        # [32] Cl_delta_a — aileron roll effectiveness
    -0.1,        # [33] Cn_delta_r — rudder yaw effectiveness
 
-    # === Propulsion ===
     8000,       # [34] omega (RPM max) — realistic electric prop speed
     0.25,       # [35] propeller diameter (m) — 10-inch
     0.1         # [36] Ct — thrust coefficient for propeller
 ]
-FW = FixedWingUAV(params = params)
 
+FW = FixedWingUAV(params = params)
 base_throttle = 0.5
 delta_throttle = 0.15
-
 FW_sampler = FW_ScenarioSampler(base_throttle = base_throttle, delta = delta_throttle, seed = seeding)
 FW_conditions = FW_sampler.sample(n_samples = sample)
 print(f"FW condition: \n {FW_conditions}")
@@ -91,8 +85,6 @@ print(f"FW condition: \n {FW_conditions}")
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
-
-# Trimmed state = [u, v, w, p, q, r, phi, theta, psi, x, y, z]
 trim_state = np.zeros(12)
 trim_state[0] = 20 # u = forward velocity (m/s)
 trim_state[1] = 0 # v
@@ -107,10 +99,8 @@ trim_state[9] = 0 # x
 trim_state[10] = 0 # y
 trim_state[11] = -100 # z = altitude in NED
 
-# Inputs = [throttle, delta_a, delta_e, delta_r]
-trim_input = [0.5, -0.00, -0.001, 0.00]  # 0.55 throttle, elevator down a bit
+trim_input = [0.5, -0.00, -0.001, 0.00]
 
-# sol = solve_ivp(lambda t, y: FW.dynamics(t, y, [base_throttle, 0, 0, 0]), [0, duration], init_test, t_eval=time)
 sol = solve_ivp(lambda t, y: FW.dynamics(t, y, trim_input), [0, duration], trim_state, t_eval=time)
 
 plt.plot(time, sol.y[9], label = "x")
@@ -124,8 +114,7 @@ fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 ax.plot(sol.y[9], sol.y[10], -sol.y[11])
 
-
-# %% Simulate
+# %% Simulate for multiple scenarios
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
@@ -181,7 +170,6 @@ ax = fig.add_subplot(111, projection='3d')
 for i in range(n_plot):
     state = fw_state[i]
     x, y, z = state[:, 9], state[:, 10], -state[:, 11]
-    # vx, vy, vz = state[:, 0], state[:, 1], -state[:, 2]
     ax.plot(x, y, z, label=f"{FW_conditions[i][2]}")
 
 ax.set_xlabel('X Position')
@@ -189,7 +177,6 @@ ax.set_ylabel('Y Position')
 ax.set_zlabel('Z Position')
 ax.set_title('Direction Plot')
 ax.legend()
-# ax.auto_scale_xyz(x, y, z)
 plt.show()
 
 # %% Data Format

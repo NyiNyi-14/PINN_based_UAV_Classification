@@ -1,7 +1,7 @@
-# %%
+# %% Import libraries
 import numpy as np
 
-# %%
+# %% Generating Noise
 class Noise:
     def __init__(self, noise_type):
         self.noise_type = noise_type

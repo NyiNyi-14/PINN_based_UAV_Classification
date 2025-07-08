@@ -7,14 +7,14 @@ import torch
 import torch.nn as nn
 
 import os
-os.chdir("/Users/nyinyia/Documents/09_LSU_GIT/PINN_based_UAV_Classification/Quadcopter")
+os.chdir("...")
 print("Current working directory:", os.getcwd())
 print("Files in the directory:", os.listdir(os.getcwd()))
 
 from quadcopter import quadcopter
 from Quad_ScenarioSampler import Quad_ScenarioSampler
 
-# %% ============================ Simulation parameter ============================
+# %% Simulation parameter
 duration = 10
 dt = 0.01
 time = np.arange(0, duration, dt)
@@ -60,30 +60,9 @@ init_test = np.zeros(12)
 init_test[2] = 100
 ds = 25
 
-# init_test[11] = -np.random.uniform(0.1, 0.3)  # r (reduced rate)
-# init_test[8] = np.random.uniform(0, 2*np.pi) #psi
-# init_test[6] = np.random.uniform(np.deg2rad(5), np.deg2rad(10))  # phi
-# init_test[6] = -np.deg2rad(20)
-# init_test[9] = -np.random.uniform(0.1, 0.3)  # p
-
 init_test[3] = np.random.uniform(-0.2, 0.2)  # vx
 init_test[4] = np.random.uniform(-0.2, 0.2)  # vy
 init_test[5] = np.random.uniform(-0.2, 0.2)  # vz
-
-# init_test = np.random.uniform(-0.5, 0.5, size=12)
-# init_test[0:2] = np.random.uniform(-5, 5, 2) # x, y
-# init_test[2] = np.random.uniform(5, 30) # z
-
-# init_test[11], init_test[9], init_test[10] = np.random.uniform(-0.3, 0.3, size = 3)  # r, p
-# init_test[8] = np.random.uniform(0, 2*np.pi)
-# init_test[6], init_test[7] = np.random.uniform(np.deg2rad(-10), np.deg2rad(10), size = 2)  # phi
-
-# init_test[7] = np.random.uniform(np.deg2rad(5), np.deg2rad(10))  # theta
-# init_test[7] = np.deg2rad(25)
-# init_test[10] = np.random.uniform(0.1, 0.3)  # q
-
-# init_test[6] = -np.random.uniform(np.deg2rad(5), np.deg2rad(10))  # phi
-# init_test[9] = -np.random.uniform(0.1, 0.3)  # p
 
 init_test[7] = np.random.uniform(np.deg2rad(5), np.deg2rad(10))  # theta
 init_test[10] = np.random.uniform(0.1, 0.3)  # q
@@ -102,7 +81,7 @@ fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
 ax.plot(sol.y[0], sol.y[1], sol.y[2])
 
-# %% Simulate
+# %% Simulate for multiple scenarios
 q_state = []
 for i in range(sample):
     omega = Quad_conditions[i][0]
@@ -163,7 +142,6 @@ ax.set_ylabel('Y Position')
 ax.set_zlabel('Z Position')
 ax.set_title('Direction Plot')
 ax.legend()
-# ax.auto_scale_xyz(x, y, z)
 plt.show()
 
 # %% Data Format

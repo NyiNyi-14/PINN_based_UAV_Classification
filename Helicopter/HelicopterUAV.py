@@ -74,9 +74,3 @@ class HelicopterUAV:
         return dstate
 
 # %%
-
-
-
-       
-
-# %%

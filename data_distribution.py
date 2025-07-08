@@ -1,14 +1,14 @@
-# %% NNNNNNNNNNNNNN Import Libraries NNNNNNNNNNNNNN
+# %% Import Libraries 
 import numpy as np
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 
-# %% NNNNNNNNNNNNNN Load Trajectories NNNNNNNNNNNNNN
-quad_data = np.load("Quadcopter/quad_dataset.npz")
-fw_data = np.load("Fixed_wings/fw_dataset.npz")
-heli_data = np.load("Helicopter/heli_dataset.npz")
+# %% Load Trajectories 
+quad_data = np.load("...")
+fw_data = np.load("...")
+heli_data = np.load("...")
 
 x_quad = quad_data["x"]
 u_quad = quad_data["u"]
@@ -39,12 +39,11 @@ u_mean, u_std = u.mean(axis=(0, 1)), u.std(axis=(0, 1))
 x_norm = normalize(x, x_mean, x_std)
 u_norm = normalize(u, u_mean, u_std)
 
-# %% NNNNNNNNNNNNNN PCA & t-SNE NNNNNNNNNNNNNN
+# %%  PCA & t-SNE 
 x_reduced = x_norm.mean(axis=1)
-u_reduced = u_norm.mean(axis=1)
-features = np.concatenate([x_reduced, u_reduced], axis=1)
+features = np.concatenate([x_reduced], axis=1)
 UAV_LABELS = ['Quadcopter', 'Fixed-wing', 'Helicopter']
-colors = ['red', 'blue', 'green']
+colors = ['blue', 'red', 'cyan']
 component = 2
 
 pca = PCA(n_components = component)
@@ -59,25 +58,27 @@ for i in range(3):
     plt.scatter(pca_feat[mask, 0], pca_feat[mask, 1], 
                 label=UAV_LABELS[i], alpha=0.6, color=colors[i])
 
-plt.title("PCA of UAV Trajectories (Averaged Features)")
-plt.xlabel("PC1")
-plt.ylabel("PC2")
-plt.legend()
+plt.xlabel(r"$\mathrm{PC \ 1}$", fontsize = 20)
+plt.ylabel(r"$\mathrm{PC \ 2}$", fontsize = 20)
+plt.legend(fontsize = 20)
 plt.grid(True)
-plt.show()
+plt.tick_params(axis='both', labelsize=20) 
+# plt.show()
+plt.tight_layout()
+# plt.savefig('.../PCA.pdf', format='pdf', bbox_inches='tight')
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 6))
 for i in range(3):
     mask = label == i
     plt.scatter(tsne_feat[mask, 0], tsne_feat[mask, 1], c=colors[i], label=UAV_LABELS[i], alpha=0.6)
 
-plt.title("t-SNE of UAV Trajectories (Averaged Features)")
-plt.xlabel("t-SNE Dim 1")
-plt.ylabel("t-SNE Dim 2")
-plt.legend()
+plt.xlabel(r"$\mathrm{t-SNE \ Dim \ 1}$", fontsize = 20)
+plt.ylabel(r"$\mathrm{t-SNE \ Dim \ 2}$", fontsize = 20)
+plt.legend(fontsize = 20)
 plt.grid(True)
+plt.tick_params(axis='both', labelsize=20) 
 plt.tight_layout()
-plt.show()
+# plt.savefig('.../tSNE.pdf', format='pdf', bbox_inches='tight')
 
 # %%
 
