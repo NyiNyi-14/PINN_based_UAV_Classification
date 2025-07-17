@@ -2,6 +2,10 @@
 
 This repository contains the code, data, and methods needed to use a ResNet PINN (PIRNN) to classify UAVs based on their trajectory data. It includes the simulations for UAV trajectories as well as the PIRNN structure.
 
+*Note: Certain code segments have been omitted due to ongoing manuscript reviews.*
+
+---
+
 ## Project Structure 
 - Fixed_wings / Helicopter / Quadcopter:
     - `FixedWingUAV.py`, `HelicopterUAV.py`, `quadcopter.py` - Modeling and dynamic characteristics of each UAV
