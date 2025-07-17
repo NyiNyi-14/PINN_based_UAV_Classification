@@ -144,7 +144,7 @@ To acknowledge the use of this work, please cite the following publication:
 ```
 
 ---
-
+<!-- 
 ## Authors
 
 **Nyi Nyi Aung** 
@@ -175,4 +175,4 @@ Department of Mechanical and Industrial Engineering
 
 Louisiana State University
 
----
+--- -->
