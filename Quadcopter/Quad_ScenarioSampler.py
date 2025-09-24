@@ -65,7 +65,7 @@ class Quad_ScenarioSampler:
         elif condition == 'yaw_left':
             w[0], w[2] = base + 0.5 * delta, base + 0.5 * delta
             w[1], w[3] = base - 0.5 * delta, base - 0.5 * delta
-            state[11] = np.random.uniform(0.1, 0.3)  # r (reduced rate)
+            state[11] = np.random.uniform(0.1, 0.3)  # r 
             state[8] = np.random.uniform(0, 2*np.pi)
     
         elif condition == 'yaw_right':

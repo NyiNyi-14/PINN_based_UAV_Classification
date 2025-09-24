@@ -100,7 +100,7 @@ for X_batch, Y_batch in test_loader:
     print("Y_batch shape:", Y_batch.shape) 
     print("First input sample:\n", X_batch[0])
     print("First label (dstate):\n", Y_batch[0])
-    break  # only inspect the first batch
+    break  
 
 for i, (X_batch, Y_batch) in enumerate(test_loader):
     print(f"Batch {i} - X shape: {X_batch.shape}, Y shape: {Y_batch.shape}")
