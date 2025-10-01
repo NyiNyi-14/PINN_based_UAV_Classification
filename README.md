@@ -1,12 +1,14 @@
 # Object Identification Under Known Dynamics: A PIRNN Approach for UAV Classification
 
-This repository contains the code, data, and methods needed to use a ResNet PINN (PIRNN) to classify UAVs based on their trajectory data. It includes the simulations for UAV trajectories as well as the PIRNN structure.
+## Publication
 
-<!-- *Note: Certain code segments have been omitted due to ongoing manuscript reviews.* -->
+This paper has been **accepted for presentation at the 2025 IEEE International Conference on Machine Learning and Applications (ICMLA 2025)**. At the moment, you can read the preprint on [arXiv](https://arxiv.org/abs/2509.21405). The final version will appear on **IEEE Xplore** after publication.
 
 ---
 
 ## Project Structure 
+
+This repository contains the code, data, and methods needed to use a ResNet PINN (PIRNN) to classify UAVs based on their trajectory data. It includes the simulations for UAV trajectories as well as the PIRNN structure.
 - Fixed_wings / Helicopter / Quadcopter:
     - `FixedWingUAV.py`, `HelicopterUAV.py`, `quadcopter.py` - Modeling and dynamic characteristics of each UAV
     - `FW_ScenarioSampler.py`, `Heli_ScenarioSampler.py`, `Quad_ScenarioSampler.py`: Capture a wide range of flight conditions
