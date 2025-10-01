@@ -150,18 +150,17 @@ This project builds upon recent advances in Physics-Informed Neural Networks (PI
 
 To acknowledge the use of this work, please cite the following publication:
 
-```bash
+```bibtex
 @misc{aung2025objectidentificationknowndynamics,
-      title={Object Identification Under Known Dynamics: A PIRNN Approach for UAV Classification}, 
-      author={Nyi Nyi Aung and Neil Muralles and Adrian Stein},
-      year={2025},
-      eprint={2509.21405},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2509.21405}, 
+  title={Object Identification Under Known Dynamics: A PIRNN Approach for UAV Classification},
+  author={Nyi Nyi Aung and Neil Muralles and Adrian Stein},
+  year={2025},
+  eprint={2509.21405},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG},
+  url={https://arxiv.org/abs/2509.21405},
 }
 ```
-
 ---
 <!-- 
 ## Authors
